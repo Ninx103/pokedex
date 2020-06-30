@@ -1,0 +1,167 @@
+===============
+Pokémon Pokédex
+===============
+Your task is to create a Pokémon Pokédex from the renowned video game. This
+document describes the behavior of the program and its inputs and outputs.
+
+Pokémon Background
+------------------
+* Pokémon are creatures that battle each other.
+* Each Pokémon has a unique 3-digit ID number and a name.
+* Pokémon have types and weaknesses.
+  * Types determine what other Pokémon they are strong or weak against.
+  * For example, a Charmander is a fire type Pokémon, and Oddish has a
+    weakness for fire type Pokémon. Therefore Charmander is strong against
+    Oddish and Oddish is weak against Charmander.
+  * A single Pokémon can have more than one type or weakness.
+* Pokémon can evolve into other Pokémon.
+  * For example, Charmander evolves into Charmeleon, who evolves into Charizard.
+  * Sometimes, a Pokémon may have a choice of two or more other Pokémon to
+    evolve into. For example, Gloom can evolve into Vileplume or Bellossom.
+
+Detailed Requirements
+=====================
+The program which you will write shall accept a CSV file containing a database
+of all known Pokémon, as well as the case-insensitive name of one Pokémon. It
+will output the other Pokémon that the given Pokémon is strong and weak against,
+and an evolution chart for the given Pokémon.
+
+Your program will be provided well-formed input files and valid command line
+arguments and must print a carefully formatted output.
+
+Database Input File
+------------------
+The first positional argument to your program will be the filename of a comma
+separated value Pokémon database file.
+
+* The first row of the file contains categorized column headers.
+  * Column headers may be sorted in any order.
+* Each additional row contains the information entries for a specific Pokémon.
+* Required columns:
+ * "ID"
+ * "Name"
+ * "Types"
+ * "Weaknesses"
+ * "Evolution"
+   * Contains the ID(s) of next Pokémon evolution(s)
+   * If no further evolution exists, this column will be empty.
+* Multiple types, weaknesses, or evolution paths will be separated by a single
+  comma and enclosed in double quotes ("").
+
+Pokédex Output
+--------------
+The second positional argument to your program will be the case-insensitive name
+of one Pokémon. The program will output the given Pokémon's properties in the
+following order:
+* "ID"
+* "Strong against"
+* "Weak against"
+* "Evolution"
+
+Strengths and Weaknesses
+------------------------
+Under the category "Strong against", you must output a list of Pokémon against
+which your given Pokémon's type is strong.
+
+* Each of these Pokémon shall be printed on a new line in order of Pokémon ID.
+* If no known Pokémon exist with weaknesses for the given Pokémon's type, print
+  "None".
+
+Under the category "Weak against", you must output a list of Pokémon against
+which your given Pokémon's type is weak.
+
+* Each of these Pokémon shall be printed on a new line in order of Pokémon ID.
+* If no known Pokémon exist which are a type that the given Pokémon is weak
+  against, print "None".
+
+Evolution Chart
+---------------
+The final output category, "Evolution", shall contain an evolution chart for
+the Pokémon.
+
+* Start with the current Pokémon
+  * If no further evolution is possible, end.
+* Continue until the final form
+  * Each form shall be separated by a single space, a single >, and another
+    single space " > ".
+  * Multiple evolution paths shall be printed on new lines.
+    * Evolution paths shall be printed in depth-first-search order, sorted
+      by Pokémon ID.
+
+Output Formatting
+-----------------
+Your program must meet the following requirements for output format.
+
+* Each category of information shall be followed by a single colon.
+* The information shall be printed on the following line, indented by 4 spaces.
+* Do not print an extra new line at the end of the output.
+
+Examples Inputs and Outputs
+===========================
+These examples are separated by a blank new line for clarity. This new line
+must not be included in the expected inputs or outputs.
+
+Example Input File
+------------------
+
+$ cat database.csv
+ID,Name,Types,Weaknesses,Evolution
+004,Charmander,Fire,"Ground,Rock,Water",005
+005,Charmeleon,Fire,"Ground,Rock,Water",006
+006,Charizard,"Fire,Flying","Rock,Electric,Water",
+043,Oddish,"Grass,Poison","Fire,Flying,Ice,Psychic",044
+044,Gloom,"Grass,Poison","Fire,Flying,Ice,Psychic","045,182"
+045,Vileplume,"Grass,Poison","Fire,Flying,Ice,Psychic",
+182,Bellossom,Grass,"Bug,Fire,Flying,Ice,Poison",
+
+Example Program Output
+----------------------
+
+$ ./pokedex database.csv Charmeleon
+ID:
+    005
+Strong against:
+    Oddish
+    Gloom
+    Vileplume
+    Bellossom
+Weak against:
+    None
+Evolution:
+    Charmeleon > Charizard
+
+$ ./pokedex database.csv Oddish
+ID:
+    043
+Strong against:
+    Bellossom
+Weak against:
+    Charmander
+    Charmeleon
+    Charizard
+Evolution:
+    Oddish > Gloom > Vileplume
+    Oddish > Gloom > Bellossom
+
+Submission Guidelines
+=====================
+You are encouraged to use Python Standard Library modules, but you may not use
+other 3rd party code.
+
+Your submission will be run against an automated test suite. This means exact
+formatting is essential for correctness.
+
+You will provide a compressed tar file (.tgz) of your work. It may contain other
+files in addition to your Pokédex program, but it must be less than 10 MB
+in size.
+
+Upon receipt of your submission, we will do the following on an Ubuntu machine:
+        tar xvfz <your_submission.tgz>
+        ./pokedex <database1> <pokemon1>
+        ./pokedex <database2> <pokemon2>
+        ./pokedex <database3> <pokemon3>
+        ...
+
+If you are working in Windows, please keep the fact that your code will be run
+on a Linux machine in mind. Work with your proctor to ensure that your code is
+compatible.

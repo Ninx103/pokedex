@@ -1,0 +1,15 @@
+ID,Name,Types,Weaknesses,Evolution
+001,Bulbasaur,Grass,"Fire,Poison","002"
+002,Ivysaur,Grass,"Fire,Poison","003"
+003,Venasaur,Grass,"Fire,Poison",
+004,Charmander,Fire,"Ground,Rock,Water",005
+005,Charmeleon,Fire,"Ground,Rock,Water",006
+006,Charizard,"Fire,Flying","Rock,Electric,Water",
+043,Oddish,"Grass,Poison","Fire,Flying,Ice,Psychic",044
+044,Gloom,"Grass,Poison","Fire,Flying,Ice,Psychic","045,182"
+045,Vileplume,"Grass,Poison","Fire,Flying,Ice,Psychic",
+182,Bellossom,Grass,"Bug,Fire,Flying,Ice,Poison",
+079,Slowpoke,"Water,Psychic","Water,Grass,Dragon","080,199"
+080,Slowbro,"Water,Psychic","Water,Grass,Dragon",
+080,Slowking,"Water,Psychic","Water,Grass,Dragon",
+150,Mewtwo,"Psychic",,

@@ -1,0 +1,93 @@
+#!/usr/bin/python
+
+import sys
+import csv
+
+class Pokedex(dict):
+
+    def __init__(self, database):
+        super(Pokedex, self).__init__()
+        self.parse_database(database)
+
+    def parse_database(self, database):
+        with open(database) as db:
+            for row in csv.DictReader(db):
+                p = Pokemon(**row)
+                self[p.id] = p
+
+    def find_resistant_pokemon_by_attacking_type(self, inc_weaknesses):
+        for pokemon in self.values():
+            if inc_weaknesses & pokemon.types:
+                yield pokemon
+
+    def find_weak_pokemon_by_attacking_type(self, inc_types):
+        for pokemon in self.values():
+            if inc_types & pokemon.weaknesses:
+                yield pokemon
+
+    def find_by_name(self, name):
+        return filter(lambda x: x.name == name, self.values())[0]
+
+    def build_evolutions(self, pokemon, line=[]):
+        if not line:
+            line = list([pokemon])
+
+        evos = line[-1].evolution
+        if evos:
+            for evo in evos:
+                next = self.get(evo)
+                self.build_evolutions(pokemon, line+[next])
+        else:
+            if len(line) > 1:
+                pokemon.evo_chains.append(list(p.name for p in line))
+
+class Pokemon(object):
+
+    def __init__(self, ID, Name, Types, Weaknesses, Evolution):
+        self.id = ID
+        self.name = Name
+        self.types = set(Types.split(',')) if Types else set([])
+        self.weaknesses = set(Weaknesses.split(',')) if Weaknesses else set([])
+        self.evolution = Evolution.split(",") if Evolution else []
+        self._asdict = {'id': self.id,
+                        'name': self.name,
+                        'type': self.types,
+                        'weaknesses': self.weaknesses,
+                        'evolution': self.evolution}
+        self.evo_chains = []
+
+    def __repr__(self):
+        return str(self._asdict)
+
+    def __str__(self):
+        return str(self._asdict)
+
+    def print_evo_chains(self):
+        for line in self.evo_chains or [["None"]]:
+            print "    %s" % (" > ".join(line))
+
+def main(args):
+    pokedex = Pokedex(args[0])
+    pokemon = pokedex.find_by_name(args[1])
+
+    if pokemon:
+        pokedex.build_evolutions(pokemon)
+        weenies = sorted(pokedex.find_weak_pokemon_by_attacking_type(pokemon.types), key=lambda child: child.id)
+        resists = sorted(pokedex.find_resistant_pokemon_by_attacking_type(pokemon.weaknesses), key=lambda child: child.id)
+
+        print "ID:"
+        print "    %s" % pokemon.id
+        print "Strong against:"
+        if not weenies: print "    None"
+        for w in weenies:
+            print "    %s" %w.name
+        print "Weak against:"
+        if not resists: print "    None"
+        for r in resists:
+            print "    %s" %r.name
+        print "Evolution:"
+        pokemon.print_evo_chains()
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
