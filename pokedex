@@ -26,7 +26,7 @@ class Pokedex(dict):
                 yield pokemon
 
     def find_by_name(self, name):
-        return filter(lambda x: x.name == name, self.values())[0]
+        return list(filter(lambda x: x.name == name, self.values()))[0]
 
     def build_evolutions(self, pokemon, line=[]):
         if not line:
@@ -64,7 +64,8 @@ class Pokemon(object):
 
     def print_evo_chains(self):
         for line in self.evo_chains or [["None"]]:
-            print "    %s" % (" > ".join(line))
+            print(f"\t{' > '.join(line)}")
+
 
 def main(args):
     pokedex = Pokedex(args[0])
@@ -75,17 +76,19 @@ def main(args):
         weenies = sorted(pokedex.find_weak_pokemon_by_attacking_type(pokemon.types), key=lambda child: child.id)
         resists = sorted(pokedex.find_resistant_pokemon_by_attacking_type(pokemon.weaknesses), key=lambda child: child.id)
 
-        print "ID:"
-        print "    %s" % pokemon.id
-        print "Strong against:"
-        if not weenies: print "    None"
+        print("ID:")
+        print(f"\t{pokemon.id}")
+        print("Strong against:")
+        if not weenies:
+            print("\tNone")
         for w in weenies:
-            print "    %s" %w.name
-        print "Weak against:"
-        if not resists: print "    None"
+            print(f"\t{w.name}")
+        print("Weak against:")
+        if not resists:
+            print("\tNone")
         for r in resists:
-            print "    %s" %r.name
-        print "Evolution:"
+            print(f"\t{r.name}")
+        print("Evolution:")
         pokemon.print_evo_chains()
 
 
