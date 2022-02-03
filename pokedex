@@ -26,7 +26,10 @@ class Pokedex(dict):
                 yield pokemon
 
     def find_by_name(self, name):
-        return next((filter(lambda x: x.name == name, self.values())))
+        try:
+            return next((filter(lambda x: x.name == name, self.values())))
+        except StopIteration:
+            return None
 
     def build_evolutions(self, pokemon, line=[]):
         if not line:
@@ -40,6 +43,7 @@ class Pokedex(dict):
         else:
             if len(line) > 1:
                 pokemon.evo_chains.append(list(p.name for p in line))
+
 
 class Pokemon(object):
 
